@@ -1,9 +1,7 @@
 import matplotlib.pyplot as plt
-import matplotlib
 from netCDF4 import Dataset
-from ipywidgets import interact, interactive, fixed, interact_manual
 import ipywidgets as widget
-from pydap.client import open_url
+
 
 def g(variable, varmin, varmax, zmin, zmax):
     fig_xsize = 10
@@ -25,7 +23,6 @@ def g(variable, varmin, varmax, zmin, zmax):
     
     plt.xlim(varmin, varmax)
     plt.ylim(zmin, zmax)
-    #plt.xlabel(xaxis_name)
     plt.ylabel(yaxis_name)
     plt.legend()
     plt.show()
@@ -43,30 +40,30 @@ def plotexpe():
             var.append(i)
     
     print('Please select a variable to plot and plot axis dimensions:')
-    interact(g,
-             variable=var,
-             varmin=widget.BoundedFloatText(value=0,
-                                            min=-1,
-                                            max=1,
-                                            step=0.01,
-                                            description='varmin:',
-                                            disabled=False), 
-             varmax=widget.BoundedFloatText(value=1,
-                                            min=-1,
-                                            max=1,
-                                            step=0.01,
-                                            description='varmax:',
-                                            disabled=False),
-             zmin=widget.BoundedFloatText(value=-2,
-                                          min=-2,
-                                          max=30,
-                                          step=0.1,
-                                          description='zmin:',
-                                          disabled=False),
-             zmax=widget.BoundedFloatText(value=30,
-                                          min=-2,
-                                          max=30,
-                                          step=0.1,
-                                          description='zmax:',
-                                          disabled=False)
-            );
+    widget.interact(g,
+                    variable=var,
+                    varmin=widget.BoundedFloatText(value=0,
+                                                   min=-1,
+                                                   max=1,
+                                                   step=0.01,
+                                                   description='varmin:',
+                                                   disabled=False), 
+                    varmax=widget.BoundedFloatText(value=1,
+                                                   min=-1,
+                                                   max=1,
+                                                   step=0.01,
+                                                   description='varmax:',
+                                                   disabled=False),
+                    zmin=widget.BoundedFloatText(value=-2,
+                                                 min=-2,
+                                                 max=30,
+                                                 step=0.1,
+                                                 description='zmin:',
+                                                 disabled=False),
+                    zmax=widget.BoundedFloatText(value=30,
+                                                 min=-2,
+                                                 max=30,
+                                                 step=0.1,
+                                                 description='zmax:',
+                                                 disabled=False)
+                   );
