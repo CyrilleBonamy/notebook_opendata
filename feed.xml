@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <thredds:catalog xmlns:thredds=""
+                 xmlns:xlink="http://www.w3.org/1999/xlink"
+                 xmlns:bes="http://xml.opendap.org/ns/bes/1.0#">
+   <thredds:service name="dap" serviceType="OPeNDAP" base="/opendap/hyrax"/>
+   <thredds:service name="file" serviceType="HTTPServer" base="/opendap/hyrax"/>
+        <thredds:dataset name="/coriolis/01EMMA_CYL" ID="/opendap/hyrax/coriolis/01EMMA_CYL/">
+            <thredds:dataset name="DATA BASIS on BAROCLINC VORTICES EXPERIMENTS.doc"
+                       ID="/opendap/hyrax/coriolis/01EMMA_CYL/DATA BASIS on BAROCLINC VORTICES EXPERIMENTS.doc">
+         <thredds:dataSize units="bytes">45568</thredds:dataSize>
+         <thredds:date type="modified">2008-05-10T04:49:18</thredds:date>
+         <thredds:access serviceName="file"
+                         urlPath="/coriolis/01EMMA_CYL/DATA BASIS on BAROCLINC VORTICES EXPERIMENTS.doc"/>
+      </thredds:dataset>
+            <thredds:dataset name="calcmod3.m" ID="/opendap/hyrax/coriolis/01EMMA_CYL/calcmod3.m">
+         <thredds:dataSize units="bytes">2053</thredds:dataSize>
+         <thredds:date type="modified">2008-05-10T04:49:18</thredds:date>
+         <thredds:access serviceName="file" urlPath="/coriolis/01EMMA_CYL/calcmod3.m"/>
+      </thredds:dataset>
+            <thredds:catalogRef name="cc" xlink:href="cc/catalog.xml" xlink:title="cc" xlink:type="simple"
+                          ID="/opendap/hyrax/coriolis/01EMMA_CYL/cc/"/>
+            <thredds:catalogRef name="ck" xlink:href="ck/catalog.xml" xlink:title="ck" xlink:type="simple"
+                          ID="/opendap/hyrax/coriolis/01EMMA_CYL/ck/"/>
+            <thredds:catalogRef name="co" xlink:href="co/catalog.xml" xlink:title="co" xlink:type="simple"
+                          ID="/opendap/hyrax/coriolis/01EMMA_CYL/co/"/>
+            <thredds:catalogRef name="cq" xlink:href="cq/catalog.xml" xlink:title="cq" xlink:type="simple"
+                          ID="/opendap/hyrax/coriolis/01EMMA_CYL/cq/"/>
+            <thredds:catalogRef name="ga" xlink:href="ga/catalog.xml" xlink:title="ga" xlink:type="simple"
+                          ID="/opendap/hyrax/coriolis/01EMMA_CYL/ga/"/>
+            <thredds:catalogRef name="oa" xlink:href="oa/catalog.xml" xlink:title="oa" xlink:type="simple"
+                          ID="/opendap/hyrax/coriolis/01EMMA_CYL/oa/"/>
+            <thredds:catalogRef name="qa" xlink:href="qa/catalog.xml" xlink:title="qa" xlink:type="simple"
+                          ID="/opendap/hyrax/coriolis/01EMMA_CYL/qa/"/>
+            <thredds:dataset name="tauxcr.m" ID="/opendap/hyrax/coriolis/01EMMA_CYL/tauxcr.m">
+         <thredds:dataSize units="bytes">1023</thredds:dataSize>
+         <thredds:date type="modified">2008-05-10T04:49:18</thredds:date>
+         <thredds:access serviceName="file" urlPath="/coriolis/01EMMA_CYL/tauxcr.m"/>
+      </thredds:dataset>
+            <thredds:catalogRef name="wa" xlink:href="wa/catalog.xml" xlink:title="wa" xlink:type="simple"
+                          ID="/opendap/hyrax/coriolis/01EMMA_CYL/wa/"/>
+            <thredds:catalogRef name="wb" xlink:href="wb/catalog.xml" xlink:title="wb" xlink:type="simple"
+                          ID="/opendap/hyrax/coriolis/01EMMA_CYL/wb/"/>
+            <thredds:catalogRef name="wg" xlink:href="wg/catalog.xml" xlink:title="wg" xlink:type="simple"
+                          ID="/opendap/hyrax/coriolis/01EMMA_CYL/wg/"/>
+        </thredds:dataset>
+    </thredds:catalog>
