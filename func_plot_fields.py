@@ -91,7 +91,7 @@ def g(button, variable, vector):
             loadedfiles[0].append(file)
             loadedfiles[1].append(rootgrp)
         datasets = rootgrp.variables
-        datasets_name = []
+        datasets_name = ['choose a dataset']
         for i in datasets.keys():
             datasets_name.append(i)
         x_data.options = datasets_name
