@@ -6,7 +6,7 @@ import ipywidgets as widgets
 from IPython.display import display, clear_output
 import matplotlib.pyplot as plt
 
-<<<<<<< HEAD
+
 def f(select, x_data, y_data, u_data, v_data):
 
     widgets.interact(g,
@@ -26,56 +26,7 @@ def f(select, x_data, y_data, u_data, v_data):
                                              disabled=False
                                             ),
                      )
-    
-=======
-global base_url
-global path
-global select
-global x_data
-global y_data
-global u_data
-global v_data
 
-base_url = 'http://servdap.legi.grenoble-inp.fr:80/opendap/'
-path = base_url
-select = widgets.Select(
-                        options=['.', '..'],
-                        value='.',
-                        description='Select a file or folder',
-                        disabled=False
-                        )
-
-x_data = widgets.Dropdown(
-                         options=['choose a dataset'],
-                         value='choose a dataset',
-                         description='x',
-                         disabled=False
-                         )
-
-y_data = widgets.Dropdown(
-                         options=['choose a dataset'],
-                         value='choose a dataset',
-                         description='y',
-                         disabled=False
-                         )
-
-u_data = widgets.Dropdown(
-                         options=['choose a dataset'],
-                         value='choose a dataset',
-                         description='u',
-                         disabled=False
-                         )
-
-v_data = widgets.Dropdown(
-                         options=['choose a dataset'],
-                         value='choose a dataset',
-                         description='v',
-                         disabled=False
-                         )
-
-global loadedfiles
-loadedfiles = [[],[]]
->>>>>>> 639edccdb46e495b800ce2274a42dd86e6077ea6
 
 def g(button, variable, vector):
     global path
@@ -123,12 +74,8 @@ def g(button, variable, vector):
             plt.show()
         except:
             print('Invalid netCDF file or invalid dataset selection')
-<<<<<<< HEAD
 
             
-=======
-        
->>>>>>> 639edccdb46e495b800ce2274a42dd86e6077ea6
 def plot_func(variable, rootgrp, vector, x_data, y_data, u_data, v_data):
     # Figure size
     fig_xsize = 15
@@ -204,7 +151,6 @@ def plot_field():
     base_url = 'http://servdap.legi.grenoble-inp.fr:80/opendap/'
     path = base_url
     
-<<<<<<< HEAD
     global loadedfiles
     loadedfiles = [[],[]]
     select = widgets.Select(
@@ -240,28 +186,3 @@ def plot_field():
                              disabled=False
                              )
     widgets.interact(f, select=select, x_data=x_data, y_data=y_data, u_data=u_data, v_data=v_data)
-=======
-    display(select)
-    display(x_data)
-    display(y_data)
-    display(u_data)
-    display(v_data)
-    
-    widgets.interact(g,
-                     button=widgets.ToggleButton(value=False,
-                                                 description='Select',
-                                                 disabled=False,
-                                                 button_style='',
-                                                 tooltip='Description'
-                                                 ),
-                     variable=widgets.ToggleButtons(options=['u', 'v', 'norm'],
-                                                    description='Variable:',
-                                                    disabled=False,
-                                                    button_style='',
-                                                    ),
-                     vector=widgets.Checkbox(value=False,
-                                             description='Display vectors',
-                                             disabled=False
-                                             ),
-                    )
->>>>>>> 639edccdb46e495b800ce2274a42dd86e6077ea6
