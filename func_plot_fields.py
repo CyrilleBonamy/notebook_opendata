@@ -6,27 +6,30 @@ import ipywidgets as widgets
 from IPython.display import display, clear_output
 import matplotlib.pyplot as plt
 
-global base_url
-global path
-global select
+def f(select, x_data, y_data, u_data, v_data):
 
-base_url = 'http://servdap.legi.grenoble-inp.fr:80/opendap/'
-path = base_url
-select = widgets.Select(
-                        options=['.', '..'],
-                        value='.',
-                        description='Select a file or folder',
-                        disabled=False
-                        )
-
-global loadedfiles
-loadedfiles = [[],[]]
+    widgets.interact(g,
+                     button=widgets.ToggleButton(value=False,
+                                                 description='Select',
+                                                 disabled=False,
+                                                 button_style='',
+                                                 tooltip='Description'
+                                                ),
+                     variable=widgets.ToggleButtons(options=['u', 'v', 'norm'],
+                                                    description='Variable:',
+                                                    disabled=False,
+                                                    button_style='',
+                                                   ),
+                     vector=widgets.Checkbox(value=False,
+                                             description='Display vectors',
+                                             disabled=False
+                                            ),
+                     )
+    
 
 def g(button, variable, vector):
     global path
-    global base_url
     global select
-    
     value = select.value
     
     if value == '.':
@@ -43,14 +46,13 @@ def g(button, variable, vector):
         catalog_file = requests.get(path + 'catalog.xml')
         tree = etree.fromstring(catalog_file.content)
         
-    options = ['.', '..']
+    options = ['', '.', '..']
     
     if not value.endswith('.nc'):
         for children in tree[2]:
             if children.get('ID').endswith('/') or children.get('ID').endswith('.nc'):
                 options.append(children.get('name'))
         select.options = options 
-    
     else:
         if value in loadedfiles[0]:
             rootgrp = loadedfiles[1][loadedfiles[0].index(value)]
@@ -58,11 +60,22 @@ def g(button, variable, vector):
             rootgrp = Dataset(path + file)
             loadedfiles[0].append(file)
             loadedfiles[1].append(rootgrp)
-        
-        plot_func(variable, rootgrp, vector)
-        plt.show()
-        
-def plot_func(variable, rootgrp, vector):
+        datasets = rootgrp.variables
+        datasets_name = ['choose a dataset']
+        for i in datasets.keys():
+            datasets_name.append(i)
+        x_data.options = datasets_name
+        y_data.options = datasets_name
+        u_data.options = datasets_name
+        v_data.options = datasets_name
+        try:
+            plot_func(variable, rootgrp, vector, x_data, y_data, u_data, v_data)
+            plt.show()
+        except:
+            print('Invalid netCDF file or invalid dataset selection')
+
+            
+def plot_func(variable, rootgrp, vector, x_data, y_data, u_data, v_data):
     # Figure size
     fig_xsize = 15
     fig_ysize = 10
@@ -77,43 +90,98 @@ def plot_func(variable, rootgrp, vector):
     plt.xlabel(xaxis_name)
     plt.ylabel(yaxis_name)
     contourcolor = plt.cm.coolwarm
-    xlin = np.linspace(0, len(rootgrp.variables['lon'])-1, len(rootgrp.variables['lon']))
-    x, y = np.meshgrid(xlin, xlin)
-    if variable == 'norm':
-        norm = np.sqrt(rootgrp.variables['u'][0, 0, :, :]**2 +
-                       rootgrp.variables['v'][0, 0, :, :]**2)
-        mycontour = plt.contourf(norm, 50, cmap=contourcolor)
-        cbar = plt.colorbar(mycontour)
-        cbar.ax.set_ylabel('norm (m/s)')
-    else:
-        varplot = rootgrp.variables[variable][0, 0, :, :]
-        mycontour = plt.contourf(varplot, 50, cmap=contourcolor)
-        cbar = plt.colorbar(mycontour)
-        cbar.ax.set_ylabel(rootgrp.variables[variable].name +
-                           " (" + rootgrp.variables[variable].units + ")")
-    if vector:
-        plt.quiver(x, y, rootgrp.variables['u'][0, 0, :, :],
-                   rootgrp.variables['v'][0, 0, :, :])
+    xlin = np.linspace(0, len(rootgrp.variables[x_data.value])-1, len(rootgrp.variables[x_data.value]))
+    ylin = np.linspace(0, len(rootgrp.variables[y_data.value])-1, len(rootgrp.variables[y_data.value]))
+    x, y = np.meshgrid(xlin, ylin)
+    try:
+        if variable == 'norm':
+            norm = np.sqrt(rootgrp.variables[u_data.value][0, 0, :, :]**2 +
+                           rootgrp.variables[v_data.value][0, 0, :, :]**2)
+            mycontour = plt.contourf(norm, 50, cmap=contourcolor)
+            cbar = plt.colorbar(mycontour)
+            cbar.ax.set_ylabel('norm (m/s)')
+        elif variable == 'u':
+            varplot = rootgrp.variables[u_data.value][0, 0, :, :]
+            mycontour = plt.contourf(varplot, 50, cmap=contourcolor)
+            cbar = plt.colorbar(mycontour)
+            cbar.ax.set_ylabel(rootgrp.variables[variable].name +
+                               " (" + rootgrp.variables[u_data.value].units + ")")
+        else:
+            varplot = rootgrp.variables[v_data.value][0, 0, :, :]
+            mycontour = plt.contourf(varplot, 50, cmap=contourcolor)
+            cbar = plt.colorbar(mycontour)
+            cbar.ax.set_ylabel(rootgrp.variables[variable].name +
+                               " (" + rootgrp.variables[v_data.value].units + ")")            
+        if vector:
+            plt.quiver(x, y, rootgrp.variables[u_data.value][0, 0, :, :],
+                       rootgrp.variables[v_data.value][0, 0, :, :])
 
+    except:
+        if variable == 'norm':
+            norm = np.sqrt(rootgrp.variables[u_data.value][:, :]**2 +
+                           rootgrp.variables[v_data.value][:, :]**2)
+            mycontour = plt.contourf(norm, 50, cmap=contourcolor)
+            cbar = plt.colorbar(mycontour)
+            cbar.ax.set_ylabel('norm (m/s)')
+        elif variable == 'u':
+            varplot = rootgrp.variables[u_data.value][:, :]
+            mycontour = plt.contourf(varplot, 50, cmap=contourcolor)
+            cbar = plt.colorbar(mycontour)
+            #cbar.ax.set_ylabel(rootgrp.variables[variable].name)
+            #                   " (" + rootgrp.variables[u_data.value].units + ")")
+        else:
+            varplot = rootgrp.variables[v_data.value][:, :]
+            mycontour = plt.contourf(varplot, 50, cmap=contourcolor)
+            cbar = plt.colorbar(mycontour)
+            #cbar.ax.set_ylabel(rootgrp.variables[variable].name)
+            #                   " (" + rootgrp.variables[v_data.value].units + ")")            
+        if vector:
+            plt.quiver(x, y, rootgrp.variables[u_data.value][:, :],
+                       variables[v_data.value][0, 0, :, :])
+           
 def plot_field():
+    global base_url
+    global path
+    global select
+    global x_data
+    global y_data
+    global u_data
+    global v_data
+    base_url = 'http://servdap.legi.grenoble-inp.fr:80/opendap/'
+    path = base_url
     
-    display(select)
-
-    widgets.interact(g,
-                     button=widgets.ToggleButton(
-                                                 value=False,
-                                                 description='Select',
-                                                 disabled=False,
-                                                 button_style='', # 'success', 'info', 'warning', 'danger' or ''
-                                                 tooltip='Description'
-                                                 ),
-                     variable=widgets.ToggleButtons(options=['u', 'v', 'norm'],
-                                                   description='Variable:',
-                                                   disabled=False,
-                                                   button_style='',
-                                                   ),
-                     vector=widgets.Checkbox(value=False,
-                                            description='Display vectors',
-                                            disabled=False
-                                            ),
-                    )
+    global loadedfiles
+    loadedfiles = [[],[]]
+    select = widgets.Select(
+                            options=['.', '..'],
+                            value='.',
+                            description='Select a file or folder',
+                            disabled=False
+                            )
+    x_data = widgets.Dropdown(
+                             options=['choose a dataset'],
+                             value='choose a dataset',
+                             description='x',
+                             disabled=False
+                             )
+    y_data = widgets.Dropdown(
+                             options=['choose a dataset'],
+                             value='choose a dataset',
+                             description='y',
+                             disabled=False
+                             )
+        
+    u_data = widgets.Dropdown(
+                             options=['choose a dataset'],
+                             value='choose a dataset',
+                             description='u',
+                             disabled=False
+                             )
+    
+    v_data = widgets.Dropdown(
+                             options=['choose a dataset'],
+                             value='choose a dataset',
+                             description='v',
+                             disabled=False
+                             )
+    widgets.interact(f, select=select, x_data=x_data, y_data=y_data, u_data=u_data, v_data=v_data)
