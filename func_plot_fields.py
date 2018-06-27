@@ -11,15 +11,21 @@ def write_in_widget():
     global select
     global path
     global rootgrp
+    global oldvalue
     
     value = select.value
     
     if value == '.':
         path = base_url
+    elif value == '..':
+        path = path.replace(oldvalue, '')
     elif value.endswith('.nc'):
         file = value
+    elif value == '':
+        pass
     else:
         path += value + '/'
+        oldvalue = value
     try:
         catalog_file = requests.get(path + 'catalog.xml')
         tree = etree.fromstring(catalog_file.content)
@@ -50,7 +56,7 @@ def write_in_widget():
         y_data.options = datasets_name
         u_data.options = datasets_name
         v_data.options = datasets_name
-        
+    
 
 
 def f(select_loc, x_data_loc, y_data_loc, u_data_loc, v_data_loc):
@@ -153,6 +159,7 @@ def plot_field():
     global y_data
     global u_data
     global v_data
+
     base_url = 'http://servdap.legi.grenoble-inp.fr:80/opendap/'
     path = base_url
     
