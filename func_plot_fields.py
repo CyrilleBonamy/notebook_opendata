@@ -7,30 +7,11 @@ from IPython.display import display, clear_output
 import matplotlib.pyplot as plt
 
 
-def f(select, x_data, y_data, u_data, v_data):
-
-    widgets.interact(g,
-                     button=widgets.ToggleButton(value=False,
-                                                 description='Select',
-                                                 disabled=False,
-                                                 button_style='',
-                                                 tooltip='Description'
-                                                ),
-                     variable=widgets.ToggleButtons(options=['u', 'v', 'norm'],
-                                                    description='Variable:',
-                                                    disabled=False,
-                                                    button_style='',
-                                                   ),
-                     vector=widgets.Checkbox(value=False,
-                                             description='Display vectors',
-                                             disabled=False
-                                            ),
-                     )
-
-
-def g(button, variable, vector):
-    global path
+def write_in_widget():
     global select
+    global path
+    global rootgrp
+    
     value = select.value
     
     if value == '.':
@@ -69,14 +50,38 @@ def g(button, variable, vector):
         y_data.options = datasets_name
         u_data.options = datasets_name
         v_data.options = datasets_name
+        
+
+
+def f(select_loc, x_data_loc, y_data_loc, u_data_loc, v_data_loc):
+    write_in_widget()
+    if select_loc.endswith('.nc'):
+        widgets.interact(h)
+
+
+def h():
+    widgets.interact(g,
+                     variable=widgets.ToggleButtons(options=['u', 'v', 'norm'],
+                                                    description='Variable:',
+                                                    disabled=False,
+                                                    button_style='',
+                                                    ),
+                     vector=widgets.Checkbox(value=False,
+                                             description='Display vectors',
+                                             disabled=False
+                                            ),
+                     )
+
+
+def g(variable, vector):
         try:
-            plot_func(variable, rootgrp, vector, x_data, y_data, u_data, v_data)
+            plot_func(variable, vector, x_data, y_data, u_data, v_data)
             plt.show()
         except:
             print('Invalid netCDF file or invalid dataset selection')
 
             
-def plot_func(variable, rootgrp, vector, x_data, y_data, u_data, v_data):
+def plot_func(variable, vector, x_data, y_data, u_data, v_data):
     # Figure size
     fig_xsize = 15
     fig_ysize = 10
@@ -185,4 +190,5 @@ def plot_field():
                              description='v',
                              disabled=False
                              )
-    widgets.interact(f, select=select, x_data=x_data, y_data=y_data, u_data=u_data, v_data=v_data)
+    widgets.interact(f, select_loc=select, x_data_loc=x_data, y_data_loc=y_data,
+                     u_data_loc=u_data, v_data_loc=v_data)
