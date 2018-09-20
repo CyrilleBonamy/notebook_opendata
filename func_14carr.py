@@ -100,7 +100,7 @@ def g(folder, file, variable, vector):
         if files[file-1] in loadedfiles[0]:
             rootgrp = loadedfiles[1][loadedfiles[0].index(files[file-1])]
         else:
-            url = url_base + files[file-1]
+            url = url_base + files[files.index("img_" + str(file) + ".nc")]
             rootgrp = Dataset(url)
             loadedfiles[0].append(files[file-1])
             loadedfiles[1].append(rootgrp)
